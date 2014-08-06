@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ConvNN" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/ConvNN" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/ConvNN" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wshadow" />
+			<Add option="-pedantic" />
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-fopenmp" />
+			<Add directory="/usr/local/cuda/include" />
+		</Compiler>
+		<Linker>
+			<Add library="opencv_core" />
+			<Add library="opencv_highgui" />
+			<Add library="opencv_imgproc" />
+			<Add library="cudart" />
+			<Add library="gomp" />
+			<Add directory="/usr/local/cuda/lib64" />
+		</Linker>
+		<Unit filename="CUDA_Common.h" />
+		<Unit filename="CUDA_ConvNN.cu">
+			<Option compile="1" />
+			<Option link="1" />
+			<Option compiler="gcc" use="1" buildCommand="/usr/local/cuda/bin/nvcc -O2 -g  -arch=sm_30 -c $file  -o $object" />
+		</Unit>
+		<Unit filename="CUDA_ConvNN.cuh" />
+		<Unit filename="CUDA_ConvNN.h" />
+		<Unit filename="CUDA_ConvNN_Layer.cu">
+			<Option compile="1" />
+			<Option link="1" />
+			<Option compiler="gcc" use="1" buildCommand="/usr/local/cuda/bin/nvcc -O2 -g -arch=sm_30 -c $file  -o $object" />
+		</Unit>
+		<Unit filename="CUDA_ConvNN_Layer.h" />
+		<Unit filename="Common.cpp" />
+		<Unit filename="Common.h" />
+		<Unit filename="Settings.h" />
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
