@@ -23,7 +23,7 @@ OBJECTS=$(SOURCES:.cpp=.o)
 all: convnn
 
 convnn: Common.h CUDA_Common.h Settings.h $(OBJECTS) $(CUDA_OBJECTS)
-	$(CXX) $(LDFLAGS) $(CUDA_OBJECTS) $(OBJECTS) -o convnn
+	$(CXX) -lopencv_core -lopencv_highgui -lopencv_imgproc $(LDFLAGS) $(CUDA_OBJECTS) $(OBJECTS) -o convnn
 
 clean:
 	$(RM) *.o convnn
