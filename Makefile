@@ -2,13 +2,17 @@ all: convnn
 	
 OBJS = CUDA_ConvNN.o CUDA_ConvNN_Layer.o Common.o main.o
 
-CXX = clang++ -std=c++11 
-#CXX = /usr/local/bin/g++-4.8 -std=c++11
-CUDACC = /usr/local/cuda/bin/nvcc
+CXX = clang++ 
+#-libstdc++
+#-std=c++11
+#-stdlib=libstdc++
+#CXX = /usr/local/bin/g++-4.8 #-std=c++11
+CUDACC = /usr/local/cuda/bin/nvcc 
+#-libstdc++
 
 DEBUG = -g
 CUDACFLAGS = -O3 -c -arch=compute_30 -code=sm_30 $(DEBUG)
-LDFLAGS = $(DEBUG) -lopencv_core -lopencv_highgui -lopencv_imgproc -lcudart 
+LDFLAGS = $(DEBUG) -lopencv_core -lopencv_highgui -lopencv_imgproc -lcudart
 #-lgomp
 
 CUDAPATH = /usr/local/cuda
@@ -21,7 +25,7 @@ CUDA_LIBS = -L/Developer/NVIDIA/CUDA-6.0/lib/
 #CUDA_LIBS = -L$(CUDAPATH)/lib
 
 convnn : $(OBJS)
-	$(CXX) $(LDFLAGS) $(OBJS) -o convnn $(CUDA_LIBS)
+	$(CXX) -o convnn $(CUDA_LIBS) $(LDFLAGS) $(OBJS)
 
 Common.o : Common.cpp
 	$(CXX) $(CFLAGS) Common.cpp 
