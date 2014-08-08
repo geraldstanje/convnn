@@ -1,37 +1,31 @@
-# Compile the my CUDA examples
-
-CC=gcc -std=c++11 
-#CC=/usr/local/bin/gcc-4.8 -std=c++11
-CXX=g++ -std=c++11
-#CXX=/usr/local/bin/g++-4.8 -std=c++11
-CUDACC=/usr/local/cuda/bin/nvcc
-CUDAPATH=/usr/local/cuda
-
-CFLAGS=-ggdb -I$(CUDAPATH)/include
-CUDACFLAGS=-m32 -arch=compute_30 -code=sm_30 -c -I$(CUDAPATH)/include
-
-LDFLAGS=-L/usr/local/cuda/lib -lcuda -lcublas -lcudart 
-RM=rm -rf
-
-CUDA_SOURCES=CUDA_ConvNN.cu
-SOURCES=main.cpp Common.cpp
-CUDA_OBJECTS=$(CUDA_SOURCES:.cu=.o)
-OBJECTS=$(SOURCES:.cpp=.o)
-
-.SUFFIXES: .cpp .cu .o
-
 all: convnn
+	
+OBJS = CUDA_ConvNN.o CUDA_ConvNN_Layer.o main.o
 
-convnn: Common.h CUDA_Common.h Settings.h $(OBJECTS) $(CUDA_OBJECTS)
-	$(CXX) -lopencv_core -lopencv_highgui -lopencv_imgproc $(LDFLAGS) $(CUDA_OBJECTS) $(OBJECTS) -o convnn
+CXX = g++ -g -std=c++11 
+#CXX=/usr/local/bin/g++-4.8 -std=c++11
+CUDACC = /usr/local/cuda/bin/nvcc
+
+DEBUG = -g
+CUDACFLAGS = -O3 -c -arch=compute_30 -code=sm_30 $(DEBUG)
+LDFLAGS = $(DEBUG) -lcudart -lopencv_core -lopencv_highgui -lopencv_imgproc
+
+CUDAPATH=/usr/local/cuda
+CFLAGS=-I$(CUDAPATH)/include
+INCLUDES = -I/Developer/NVIDIA/CUDA-6.0/include/
+CUDA_LIBS = -L/Developer/NVIDIA/CUDA-6.0/lib/
+
+convnn : $(OBJS)
+	$(CXX) $(LDFLAGS) $(OBJS) -o CXX $(CUDA_LIBS)
+
+main.o : Common.cpp main.cpp
+	$(CXX) $(CFLAGS) Common.cpp main.cpp
+
+CUDA_ConvNN.o : CUDA_ConvNN.cu
+	$(CUDACC) $(CUDACFLAGS) CUDA_ConvNN.cu $(INCLUDES)
+	    
+CUDA_ConvNN_Layer.o : CUDA_ConvNN_Layer.cu
+	$(CUDACC) $(CUDACFLAGS) CUDA_ConvNN_Layer.cu $(INCLUDES)
 
 clean:
-	$(RM) *.o convnn
-
-.cpp.o:
-	$(CXX) $(CFLAGS) $< -c -o $@
-
-#.cu.o:
-#	$(CUDACC) --compiler-bindir /usr/local/bin $(CUDACFLAGS) $< -c -o $@
-.cu.o:
-	$(CUDACC) $(CUDACFLAGS) $< -c -o $@
+	rm -f *.o convnn
