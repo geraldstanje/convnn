@@ -2,30 +2,23 @@ all: convnn
 	
 OBJS = CUDA_ConvNN.o CUDA_ConvNN_Layer.o Common.o main.o
 
-CXX = clang++ 
-#-libstdc++
-#-std=c++11
-#-stdlib=libstdc++
-#CXX = /usr/local/bin/g++-4.8 #-std=c++11
-CUDACC = /usr/local/cuda/bin/nvcc 
-#-libstdc++
+CXX = g++ -stdlib=libstdc++
+CUDACC = /usr/local/cuda/bin/nvcc
 
 DEBUG = -g
-CUDACFLAGS = -O3 -c -arch=compute_30 -code=sm_30 $(DEBUG)
-LDFLAGS = $(DEBUG) -lopencv_core -lopencv_highgui -lopencv_imgproc -lcudart
-#-lgomp
 
 CUDAPATH = /usr/local/cuda
-CFLAGS = -O3 -c -I$(CUDAPATH)/include 
-#-Wshadow -pedantic -Wall 
-#-fopenmp
 INCLUDES = -I/Developer/NVIDIA/CUDA-6.0/include/
-#INCLUDES  += -I/Developer/NVIDIA/CUDA-6.0/samples/common/inc
 CUDA_LIBS = -L/Developer/NVIDIA/CUDA-6.0/lib/
-#CUDA_LIBS = -L$(CUDAPATH)/lib
+# make sure that you export: export DYLD_LIBRARY_PATH=/Developer/NVIDIA/CUDA-6.0/lib/
+
+CFLAGS = -O3 -c -Wshadow -pedantic -Wall -I$(CUDAPATH)/include
+CUDACFLAGS = -O3 -c -arch=compute_30 -code=sm_30 $(DEBUG) 
+
+LDFLAGS = $(DEBUG) -lopencv_core -lopencv_highgui -lopencv_imgproc -lcudart
 
 convnn : $(OBJS)
-	$(CXX) -o convnn $(CUDA_LIBS) $(LDFLAGS) $(OBJS)
+	$(CXX) -o convnn $(OBJS) $(CUDA_LIBS) $(LDFLAGS)
 
 Common.o : Common.cpp
 	$(CXX) $(CFLAGS) Common.cpp 
